@@ -91,7 +91,7 @@ module Geokit
     module ClassMethods
 
       # A proxy to an instance of a finder adapter, inferred from the connection's adapter.
-      def adapter
+      def geoadapter
         @adapter ||= begin
           require File.join('geokit-rails', 'adapters', connection.adapter_name.downcase)
           klass = Adapters.const_get(connection.adapter_name.camelcase)
@@ -319,7 +319,7 @@ module Geokit
         lng = deg2rad(origin.lng)
         multiplier = units_sphere_multiplier(units)
 
-        adapter.sphere_distance_sql(lat, lng, multiplier) if adapter
+        geoadapter.sphere_distance_sql(lat, lng, multiplier) if geoadapter
       end
 
       # Returns the distance SQL using the flat-world formula (Phythagorean Theory).  The SQL is tuned
@@ -328,7 +328,7 @@ module Geokit
         lat_degree_units = units_per_latitude_degree(units)
         lng_degree_units = units_per_longitude_degree(origin.lat, units)
 
-        adapter.flat_distance_sql(origin, lat_degree_units, lng_degree_units)
+        geoadapter.flat_distance_sql(origin, lat_degree_units, lng_degree_units)
       end
 
     end # ClassMethods
